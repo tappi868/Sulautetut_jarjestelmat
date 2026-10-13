@@ -50,8 +50,6 @@ static void set_leds(int r, int g)
     gpio_pin_set_dt(&green, g);
 }
 
-/* Sleep for ms, but wake early if the state changes.
-   Returns true if the state is still the same afterwards. */
 static bool wait_in_state(int state, int ms)
 {
     for (int t = 0; t < ms; t += 20) {
@@ -76,11 +74,11 @@ static void led_task(void *a, void *b, void *c)
             break;
 
         case LED_TRAFFIC:
-            set_leds(1, 0);                       /* red */
+            set_leds(1, 0);                      
             if (!wait_in_state(state, 2000)) break;
-            set_leds(1, 1);                       /* yellow = red + green */
+            set_leds(1, 1);                       
             if (!wait_in_state(state, 1000)) break;
-            set_leds(0, 1);                       /* green */
+            set_leds(0, 1);                      
             wait_in_state(state, 2000);
             break;
 
@@ -123,5 +121,4 @@ static void led_task(void *a, void *b, void *c)
     }
 }
 
-/* 100 ms start delay so main() has time to run init_led() first */
 K_THREAD_DEFINE(led_thread, STACKSIZE, led_task, NULL, NULL, NULL, PRIORITY, 0, 100);

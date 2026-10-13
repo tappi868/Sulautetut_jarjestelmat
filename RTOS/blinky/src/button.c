@@ -25,7 +25,6 @@ static void button_handler(const struct device *dev, struct gpio_callback *cb, u
     printk("Button %d pressed\n", b->id + 1);
 
     switch (b->id) {
-    case 0:  /* traffic light, or off if something is already running */
         led_state = (led_state == LED_OFF) ? LED_TRAFFIC : LED_OFF;
         break;
     case 1: led_state = LED_RED;          break;

@@ -11,9 +11,9 @@
 #define STACKSIZE 1024
 #define PRIORITY 5
 
-#define MSG_LEN    64     /* max message length incl. '\0' */
-#define IDLE_MS    1000   /* end message after this much silence if no Enter */
-#define DEFAULT_MS 1000   /* used when a color has no time, e.g. "YRG" style */
+#define MSG_LEN    64   
+#define IDLE_MS    1000   
+#define DEFAULT_MS 1000   
 
 
 
@@ -65,7 +65,6 @@ static void uart_task(void *unused1, void *unused2, void *unused3)
 	while (true) {
 		bool end_of_msg = false;
 
-		/* wait forever for the first byte, then only IDLE_MS for the next */
 		k_timeout_t wait = (uart_msg_cnt == 0) ? K_FOREVER : K_MSEC(IDLE_MS);
 
 		if (k_msgq_get(&rx_q, &rc, wait) == 0) {
@@ -75,7 +74,6 @@ static void uart_task(void *unused1, void *unused2, void *unused3)
 				uart_msg[uart_msg_cnt++] = rc;
 			}
 		} else {
-			/* timed out with data waiting: treat as end of message */
 			end_of_msg = true;
 		}
 
@@ -105,7 +103,6 @@ static void dispatcher_task(void *unused1, void *unused2, void *unused3)
 
 		printk("Dispatcher: %s\n", sequence);
 
-		/* Parse "<color> <ms> <color> <ms> ..." and play each step in order */
 		char *p = sequence;
 		while (*p != '\0') {
 			if (isspace((unsigned char)*p)) {
@@ -137,7 +134,6 @@ static void dispatcher_task(void *unused1, void *unused2, void *unused3)
 
 			printk("Data: %c %d\n", color, time);
 
-			/* blocks until the LED task has shown this step */
 			led_play(color, time);
 		}
 	}
