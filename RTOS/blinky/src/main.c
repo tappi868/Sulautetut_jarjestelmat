@@ -2,7 +2,7 @@
 #include <zephyr/sys/printk.h>
 #include "app.h"
 
-//tavoittelen 2/3 pisteitä
+//tavoittelen 2/4 pisteitä
 
 int main(void)
 {
